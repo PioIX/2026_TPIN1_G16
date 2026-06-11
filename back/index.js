@@ -14,15 +14,9 @@ app.listen(port, function(){
     console.log(`Server running in http://localhost:${port}`);
 });
 
-app.get('/', function(req, res){
-    res.status(200).send({
-        message: 'GET Home route working fine!'
-    });
-});
-
 
 // get
-app.get('/clubes', async function(req, res) {
+/* app.get('/clubes', async function(req, res) {
     let respuesta;
     if (req.query.id != undefined) {
         respuesta = await realizarQuery(`SELECT * FROM Clubes WHERE id_club=${req.query.id}`)
