@@ -18,18 +18,21 @@
             <h2>INICIO DE SESIÓN</h2>
             <div class="grupo-formulario">
                 <label>Username</label>
-                <input type="text" class="input-texto" placeholder="Tu usuario">
+                <input type="text" class="input-texto" placeholder="Tu usuario" id="username">
             </div>
             <div class="grupo-formulario">
                 <label>Password</label>
-                <input type="password" class="input-texto" placeholder="Tu contraseña">
+                <input type="password" class="input-texto" placeholder="Tu contraseña" id="password">
             </div>
             <div class="acciones-auth">
-                <a href="categorias.html" class="boton-principal boton-pequeno">Iniciar Sesión</a>
+                <button onclick="buttonLogin()" class="boton-principal boton-pequeno">Iniciar Sesión</button>
                 <a href="registro.html" class="enlace-auth">Registrarse</a>
             </div>
         </div>
     </div>
 
+    <script src="scripts/requests.js"></script>
+    <script src="scripts/dom.js"></script>
+    <script src="scripts/logic.js"></script>
 </body>
 </html>
