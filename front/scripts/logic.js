@@ -1,14 +1,13 @@
 // Inicialización
-let users = getUserTable(); // hay que crear ela funcion en el backend
+let players = getPlayerTable();
 let id = 0
-
 
 // Login
 const login = (username, password) => {
-    for (let i = 0; i <= users.length-1; i++) {
-        if (users[i].username == username) {
-            if (users[i].password == password) {
-                return users[i].id;
+    for (let i = 0; i <= players.length-1; i++) {
+        if (players[i].username == username) {
+            if (players[i].password == password) {
+                return players[i].id;
             } else {
                 return 0;
             }
@@ -27,27 +26,28 @@ const buttonLogin = () => {
     }
 }
 // Registro
-const register = (name, username, password) => {
+const register = (username, password) => {
     let exist = 0;
-    for (let i = 0; i <= users.length-1; i++) {
-        if (users[i].username == username) {
+    for (let i = 0; i <= players.length-1; i++) {
+        if (players[i].username == username) {
             exist++;
         }
     }
     if (exist == 0) {
-        user = new User(name, username, password);
-        users.push(user);
-        putUserTable(user); // hay que crear la funcion en el backend
-        return user.id;
+        let date = new Date();
+        let today = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+        let player = new Player(username, password, today);
+        players.push(player);
+        postPlayerTable(player);
+        return player.id;
     } else {
         return -1;
     }   
 }
 const buttonRegister = () => {
-    let name = ui.getName();
     let username = ui.getUser();
     let password = ui.getPassword();
-    id = register(name, username, password);
+    id = register(username, password);
     if (id < 0) {
         ui.showModal("Error", "Este usuario ya existe.");
     }
