@@ -18,22 +18,25 @@
             <h2>REGISTRO</h2>
             <div class="grupo-formulario">
                 <label>Username</label>
-                <input type="text" class="input-texto" placeholder="Crea tu usuario">
+                <input type="text" class="input-texto" placeholder="Crea tu usuario" id="username">
             </div>
             <div class="grupo-formulario">
                 <label>Contraseña</label>
-                <input type="password" class="input-texto" placeholder="Crea tu contraseña">
+                <input type="password" class="input-texto" placeholder="Crea tu contraseña" id="password1">
             </div>
             <div class="grupo-formulario">
                 <label>Confirmar contraseña</label>
-                <input type="password" class="input-texto" placeholder="Repite la contraseña">
+                <input type="password" class="input-texto" placeholder="Repite la contraseña" id="password2">
             </div>
             <div class="acciones-auth">
-                <a href="categorias.html" class="boton-principal boton-pequeno">Registrarse</a>
+                <button onclick="buttonRegister()" class="boton-principal boton-pequeno">Registrarse</button>
                 <a href="login.html" class="enlace-auth">Iniciar Sesión</a>
             </div>
         </div>
     </div>
 
+    <script src="scripts/requests.js"></script>
+    <script src="scripts/dom.js"></script>
+    <script src="scripts/logic.js"></script>
 </body>
 </html>
