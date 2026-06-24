@@ -1,6 +1,15 @@
 // Inicialización
-let players = getPlayerTable();
-let id = 0
+let players = [];
+let id = 0;
+loadPlayers();
+
+async function loadPlayers(){
+    let data = await getPlayerTable();
+    for (const player of data) {
+        let date = player.ingreso.slice(0,10);
+        players.push(new Player(player.usuario, player.contraseña, player.puntaje, date));
+    }
+}
 
 // Login
 const login = (username, password) => {
@@ -23,6 +32,8 @@ const buttonLogin = () => {
         ui.showModal("Error", "Contraseña incorrecta.");
     } else if (id < 0) {
         ui.showModal("Error", "El usuario no existe.");
+    } else {
+        window.location.href = "categorias.html"
     }
 }
 // Registro
@@ -37,15 +48,15 @@ const register = (username, password, password2) => {
         if (password == password2) {
             let date = new Date();
             let today = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
-            let player = new Player(username, password, today);
+            let player = new Player(username, password, 0, today);
             players.push(player);
-            postPlayerTable(player);
+            postPlayerTable({usuario: username, contraseña: password, puntaje: 0, ingreso: today});
             return player.id;
         } else {
-            return -2;
+            return -1;
         }
     } else {
-        return -1;
+        return 0;
     }   
 }
 const buttonRegister = () => {
@@ -53,9 +64,15 @@ const buttonRegister = () => {
     let password = ui.getPassword();
     let password2 = ui.getSecondPassword();
     id = register(username, password, password2);
-    if (id == -1) {
+    if (id == 0) {
         ui.showModal("Error", "Este usuario ya existe.");
-    } else if (id == -2) {
+    } else if (id < 0) {
         ui.showModal("Error", "Contraseña no coincide.");
+    } else {
+        window.location.href = "categorias.html"
     }
+}
+// Cierre de sesión
+const signOut = () => {
+    ui.showModal(); // crear nuevo modal
 }
