@@ -33,7 +33,7 @@ app.post('/jugadores', async function(req,res) {
                 INSERT INTO Jugadores (usuario, contraseña, puntaje, ingreso) VALUES 
                 ("${req.body.usuario}", "${req.body.contraseña}", ${req.body.puntaje}, "${req.body.ingreso}")
                 `) ;
-            res.send("Usuario agregado") ;
+            res.send({mensaje:"Club agregado"});
         } else {
             throw new Error('Este usuario ya esta registrado') ;
         }
