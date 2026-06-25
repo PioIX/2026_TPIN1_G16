@@ -29,6 +29,15 @@ class UserInterface {
 
         modal.show();
     }
+
+    showModalSignOut() {
+        const modal = new bootstrap.Modal('#modalSignOut', {
+            keyboard: true,
+            focus: true
+        });
+
+        modal.show();
+    }
 }
 
 

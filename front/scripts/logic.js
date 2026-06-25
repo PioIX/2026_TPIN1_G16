@@ -7,7 +7,7 @@ async function loadPlayers(){
     let data = await getPlayerTable();
     for (const player of data) {
         let date = player.ingreso.slice(0,10);
-        players.push(new Player(player.usuario, player.contraseña, player.puntaje, date));
+        players.push(new Player(player.usuario, player.contraseña, player.puntaje, date, player.administrador));
     }
 }
 
@@ -69,10 +69,14 @@ const buttonRegister = () => {
     } else if (id < 0) {
         ui.showModal("Error", "Contraseña no coincide.");
     } else {
-        window.location.href = "categorias.html"
+        window.location.href = "categorias.html";
     }
 }
 // Cierre de sesión
+const modalSignOut = () => {
+    ui.showModalSignOut();
+}
 const signOut = () => {
-    ui.showModal(); // crear nuevo modal
+    id = 0;
+    window.location.href = "index.html";
 }
