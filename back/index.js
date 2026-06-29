@@ -97,7 +97,7 @@ app.get('/ranking', async function(req,res) {
 // words
 app.get('/palabras', async function(req,res) {
     try {
-        let respuesta = await realizarQuery("SELECT * FROM Palabras");
+        let respuesta = await realizarQuery("SELECT Palabras.id, palabra, dificultad, categoria, usuario FROM Palabras INNER JOIN Categorias ON Categorias.id = Palabras.id_categoria INNER JOIN Jugadores ON Jugadores.id = Palabras.id_admin");
         res.send(respuesta);
     } catch (error) {
         res.status(500).send('Ha ocurrido un error, intentar más tarde');
