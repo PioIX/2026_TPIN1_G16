@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <title>Ahorcado - Administrador</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body onload="loadPlayersTable()">
+
+    <div class="contenedor-vista-admin">
+        <h1 class="titulo-ahorcado">ADMINISTRADOR</h1>
+        <div class="caja-principal-admin">
+            <h2>¿Que vamos a modificar hoy?</h2>
+            <div class="lista-botones">
+                <a class="boton-principal" id="Usuario" onclick="loadPlayersTable()">Usuarios</a>
+                <a class="boton-principal" id="Categoria" onclick="loadCategoriesTable()">Categorias</a>
+                <a class="boton-principal" id="Palabra" onclick="loadWordsTable()">Palabras</a>
+            </div>
+        </div>
+    </div>
+    <div class="tabla-contenedor">
+        <table class="tabla-admin" id="tabla">
+        </table>
+    </div>
+     <div id="modal" class="modal fade" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Modal title</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p id="modalBody">Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
+            >
+              ¡Listo!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+    <script src="scripts/classes/player.js"></script>
+    <script src="scripts/classes/word.js"></script>
+    <script src="scripts/classes/game.js"></script>
+    <script src="scripts/requests.js"></script>
+    <script src="scripts/dom.js"></script>
+    <script src="scripts/logic.js"></script>
+</body>
+</html>
+
+  
