@@ -53,7 +53,7 @@ async function rankingPlayer() {
     for (i = 0; i < response.length; i++) {
         registros += `<tr><td>${response[i].usuario}</td><td>${response[i].puntaje}</td></tr>`;
     }
-    document.getElementById("tablaRanking").innerHTML = registros; // hay que hacer la tabla en html
+    document.getElementById("tabla").innerHTML = registros;
 }
 
 
