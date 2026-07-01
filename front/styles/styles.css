@@ -49,14 +49,6 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-.caja-principal h2 {
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
-    text-align: center;
-}
-
 /* Botones principales */
 .boton-principal {
     background-color: #bfa1ce;
@@ -284,4 +276,91 @@ body {
 .fondo-desenfocado {
     opacity: 0.3;
     pointer-events: none;
+}
+
+.tabla-contenedor{
+    width: 700px;
+    margin-top: 25px;
+}
+
+.tabla-admin{
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+
+body{
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.contenedor-vista-admin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+    position: relative;
+    top: -150px;
+}
+
+/* TÍTULO */
+.titulo-ahorcado{
+    font-size: 2.2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* CAJA GRIS */
+.caja-principal-admin{
+    width: 100%;
+    max-width: 850px;
+
+    background-color: #e6e6e6;
+    border-radius: 4px;
+    padding: 25px 30px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    box-sizing: border-box;
+}
+
+/* SUBTÍTULO */
+.caja-principal-admin h2{
+    margin: 0;
+    text-align: center;
+}
+
+/* BOTONES */
+.lista-botones{
+    display: flex;
+    flex-direction: row;   /* Botones en fila */
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.boton-principal{
+    min-width: 140px;
+    padding: 14px 20px;
+    background: #bfa1ce;
+    color: #000;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
 }
