@@ -2,19 +2,18 @@ class UserInterface {
     constructor() {}
 
 
-    // gets
-    getName() {
-        return document.getElementById("name").value;
-    }
-
-
+    // get
     getUser() {
-        return document.getElementById("user").value;
+        return document.getElementById("username").value;
     }
 
 
     getPassword() {
         return document.getElementById("password").value;
+    }
+
+    getSecondPassword() {
+        return document.getElementById("password2").value;
     }
 
 
@@ -24,6 +23,15 @@ class UserInterface {
         document.getElementById("modalBody").textContent = body;
 
         const modal = new bootstrap.Modal('#modal', {
+            keyboard: true,
+            focus: true
+        });
+
+        modal.show();
+    }
+
+    showModalSignOut() {
+        const modal = new bootstrap.Modal('#modalSignOut', {
             keyboard: true,
             focus: true
         });
