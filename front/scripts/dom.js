@@ -7,7 +7,6 @@ class UserInterface {
         return document.getElementById("username").value;
     }
 
-
     getPassword() {
         return document.getElementById("password").value;
     }
@@ -37,6 +36,32 @@ class UserInterface {
         });
 
         modal.show();
+    }
+
+    showModalTablas(tabla, funcion) {
+        const modal = new bootstrap.Modal('#modalTablas', {
+            keyboard: true,
+            focus: true
+        });
+
+        inputs(tabla, funcion);
+
+        modal.show();
+    }
+
+    inputs(tabla, funcion) {
+        let div = document.getElementById("inputsModal").value
+        if (funcion == "Eliminar") {
+            div += '<input id="id" type="number" placeholder="ID">';
+        } else {
+            if (funcion == "Editar") {
+                div += '<input id="id" type="number" placeholder="ID">';
+            }
+            if (tabla == "Jugadores") {
+                div += '<input id="user" placeholder="Username">';
+                div += '<input id="password" placeholder="Contraseña">';
+            }
+        }
     }
 }
 

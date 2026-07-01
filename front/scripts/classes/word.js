@@ -1,12 +1,12 @@
 let lastIdWord = 0;
 
 class Word {
-    constructor(palabra, dificultad, categoria, admin) {
+    constructor(word, dificulty, category, admin) {
         lastIdWord += 1;
         this.id = lastIdWord;
-        this.palabra = palabra;
-        this.dificultad = dificultad;
-        this.categoria = categoria;
+        this.word = word;
+        this.dificulty = dificulty;
+        this.category = category;
         this.admin = admin;
     }
 }
