@@ -122,17 +122,33 @@ const loadPlayersTable = () => {
     document.getElementById("tabla").innerHTML = registros; // hay que hacer la tabla en html
 }
 // añadir usuario
+const addPlayer = (user, password, points, signin, admin) => {
+    let exist = 0;
+    for (let i = 0; i < players.length; i++) {
+        if (players[i].username == user) {
+            exist++;
+        }
+    }
+    if (exist == 0) {
+        let object = new Player(user, password, points, signin, admin);
+        players.push(object);
+        postPlayer({usuario: user, contraseña: password, puntaje: points, ingreso: signin, administrador: admin});
+        return object.id;
+    } else {
+        return 0;
+    }
+}
 const buttonAddPlayer = () => {
-    let user;
-    let password;
-    let password2;
-    let userId = register(user, password, password2);
+    let user = ui.getUser();
+    let password = ui.getPassword();
+    let points = ui.getPoints();
+    let signin = ui.getSignIn();
+    let admin = ui.getAdmin();
+    let userId = ui.register(user, password, points, signin, admin);
     if (userId == 0) {
         ui.showModal("Error", "Este usuario ya existe.");
-    } else if (userId < 0) {
-        ui.showModal("Error", "Contraseña no coincide.");
     } else {
-        loadPlayersTable()
+        loadPlayersTable();
     }
 }
 // actualizar usuario
@@ -152,13 +168,13 @@ const updatePlayer = (idUser, user, password, points, signin, admin) => {
     return update;
 }
 const buttonUpdatePlayer = () => {
-    let idUser;
-    let user;
-    let password;
-    let points;
-    let signin;
-    let admin;
-    let update = updatePlayer();
+    let idUser = ui.getId();
+    let user = ui.getUser();
+    let password = ui.getPassword();
+    let points = ui.getPoints();
+    let signin = ui.getSignIn();
+    let admin = ui.getAdmin();
+    let update = updatePlayer(idUser, user, password, points, signin, admin);
     if (update) {
         loadPlayersTable();
     } else {
@@ -178,7 +194,7 @@ const erasePlayer = (idUser) => {
     return erase;
 }
 const buttonErasePlayer = () => {
-    let idUser;
+    let idUser = ui.getId();
     let erase = erasePlayer(idUser);
     if (erase) {
         loadPlayersTable();
@@ -197,7 +213,7 @@ const loadWordsTable = () => {
     document.getElementById("tabla").innerHTML = registros; // hay que hacer la tabla en html
 }
 // añadir palabra
-const addWord = (word, dificulty, category, admin) => {
+const addWord = (word, dificulty, category) => {
     let exist = 0;
     for (let i = 0; i < words.length; i++) {
         if (words[i].word == word) {
@@ -205,20 +221,19 @@ const addWord = (word, dificulty, category, admin) => {
         }
     }
     if (exist == 0) {
-        let object = new Word(word, dificulty, category, admin);
+        let object = new Word(word, dificulty, category, id);
         words.push(object);
-        postWord({palabra: word, dificultad: dificulty, categoria: category, usuario: admin});
+        postWord({palabra: word, dificultad: dificulty, categoria: category, usuario: id});
         return object.id;
     } else {
         return 0;
     }
 }
 const buttonAddWord = () => {
-    let word;
-    let dificulty;
-    let category;
-    let admin;
-    let object = addWord(word, dificulty, category, admin);
+    let word = ui.getWord();
+    let dificulty = ui.getDificulty();
+    let category = ui.getCategoryId();
+    let object = addWord(word, dificulty, category);
     if (object > 0) {
         loadWordsTable();
     } else {
@@ -226,27 +241,26 @@ const buttonAddWord = () => {
     }
 }
 // actualizar palabra
-const updateWord = (idWord, word, dificulty, category, admin) => {
+const updateWord = (idWord, word, dificulty, category) => {
     let update = false;
     for (let i = 0; i < words.length; i++) {
         if (words[i].id == idWord) {
             words[i].word = word;
             words[i].dificulty = dificulty;
             words[i].category = category;
-            words[i].admin = admin;
-            putWord({palabra: word, dificultad: dificulty, categoria: category, admin: admin});
+            words[i].admin = id;
+            putWord({palabra: word, dificultad: dificulty, categoria: category, admin: id});
             update = true;
         }
     }
     return update;
 }
 const buttonUpdateWord = () => {
-    let idWord;
-    let word;
-    let dificulty;
-    let category;
-    let admin;
-    let update = updateWord(idWord, word, dificulty, category, admin);
+    let idWord = ui.getId();
+    let word = ui.getWord();
+    let dificulty = ui.getDificulty();
+    let category = ui.getCategoryId();
+    let update = updateWord(idWord, word, dificulty, category);
     if (update) {
         loadWordsTable();
     } else {
@@ -266,7 +280,7 @@ const eraseWord = (idWord) => {
     return erase;
 }
 const buttonEraseWord = () => {
-    let idWord;
+    let idWord = ui.getId();
     let erase = eraseWord(idWord);
     if (erase) {
         loadWordsTable();
@@ -302,12 +316,35 @@ const addCategory = (category) => {
     }
 }
 const buttonAddCategory = () => {
-    let category;
+    let category = ui.getCategory();
     let object = addCategory(category);
     if (object > 0) {
         loadCategoryTable();
+        ui.createCategory();
     } else {
         ui.showModal("Error", "Ya existe este registro.")
+    }
+}
+// editar categoria
+const updateCategory = (idCategory, category) => {
+    let update = false;
+    for (let i = 0; i < categories.length; i++) {
+        if (categories[i].id == idCategory) {
+            categories[i].category = category;
+            putCategory({categoria: category});
+            update = true;
+        }
+    }
+    return update;
+}
+const buttonUpdateCategory = () => {
+    let idCategory = ui.getId();
+    let category = ui.getCategory();
+    let update = updateWord(idCategory, category);
+    if (update) {
+        loadCategoriesTable();
+    } else {
+        ui.showModal("Error", "No se encontro la palabra.")
     }
 }
 // eliminar categoria
@@ -323,7 +360,7 @@ const eraseCategory = (idCategory) => {
     return erase;
 }
 const buttonEraseCategory = () => {
-    let idCategory;
+    let idCategory = ui.getId();
     let erase = eraseCategory(idCategory);
     if (erase) {
         loadCategoryTable();
