@@ -1,9 +1,9 @@
 let lastIdCategory = 0;
 
 class Category {
-    constructor(categoria){
+    constructor(category){
         lastIdCategory += 1;
         this.id = lastIdCategory;
-        this.categoria = categoria;
+        this.category = category;
     }
 }
