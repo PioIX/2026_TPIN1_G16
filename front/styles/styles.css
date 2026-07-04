@@ -74,6 +74,30 @@ body {
     background-color: #ae8bc0;
 }
 
+.boton-secundario {
+    background-color: #beb1c5;
+    color: #000000;
+    border: none;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    width: 100%;
+    max-width: 220px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    text-align: center;
+}
+
+.boton-secundario:hover {
+    background-color: #a99ab1;
+}
+
 /* Botones pequeños  */
 .boton-pequeno {
     padding: 10px 15px;
@@ -155,18 +179,12 @@ body {
 }
 
 /* --- 4. Categorías --- */
-.cuadricula-categorias {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    width: 100%;
-    max-width: 500px;
-    justify-items: center;
-    margin-top: 10px;
-}
-
-.categoria-solitaria {
-    grid-column: span 2;
+.lista-botones{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 /* --- 5. Juego y Teclado --- */
