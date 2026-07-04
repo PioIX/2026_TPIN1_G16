@@ -17,39 +17,23 @@
     <div class="contenedor-vista">
         <img src="img/flecha.png" alt="Flecha para volver atrás" onclick="modalSignOut()">
         <h1 class="titulo-ahorcado">AHORCADO</h1>
-        
+      
         <div class="cuadricula-categorias" id="categorias">
-            <a href="juego.html" class="boton-principal">CATEGORIA 1</a>
-            <a href="juego.html" class="boton-principal">CATEGORIA 2</a>
-            <a href="juego.html" class="boton-principal">CATEGORIA 4</a>
-            <a href="juego.html" class="boton-principal">CATEGORIA 3</a>
-            <a href="juego.html" class="boton-principal categoria-solitaria">CATEGORIA 5</a>
         </div>
     </div>
 
     <div id="modal" class="modal fade" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle">Modal title</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+        <div class="modal-content modal-personalizado">
+          <div class="modal-header modal-header-personalizado">
+            <h5 class="modal-title titulo-modal" id="modalTitle"></h5>
+            <button type="button" class="btn-close boton-cerrar-modal" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <p id="modalBody">Modal body text goes here.</p>
+          <div class="modal-body modal-cuerpo">
+            <p id="modalBody"></p>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-success"
-              data-bs-dismiss="modal"
-            >
-              ¡Listo!
-            </button>
+          <div class="modal-footer modal-footer-personalizado">
+            <button type="button" class="boton-principal" data-bs-dismiss="modal">¡Listo!</button>
           </div>
         </div>
       </div>
@@ -57,35 +41,17 @@
 
     <div id="modalSignOut" class="modal fade" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle">Cierre de sesión</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+        <div class="modal-content modal-personalizado">
+          <div class="modal-header modal-header-personalizado">
+            <h5 class="modal-title titulo-modal" id="modalTitle">Cierre de sesión</h5>
+            <button type="button" class="btn-close boton-cerrar-modal" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body modal-cuerpo">
             <p id="modalBody">¿Está seguro que desea cerrar sesión?</p>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-dismiss="modal"
-            >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              onclick="signOut()"
-              data-bs-dismiss="modal"
-            >
-              Cerrar Sesión
-            </button>
+          <div class="modal-footer modal-footer-personalizado">
+            <button type="button" class="boton-secundario" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="boton-principal boton-peligro" onclick="signOut()" data-bs-dismiss="modal">Cerrar Sesión</button>
           </div>
         </div>
       </div>
