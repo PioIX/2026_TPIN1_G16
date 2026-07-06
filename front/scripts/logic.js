@@ -3,15 +3,13 @@ let players = [];
 let words = [];
 let categories = [];
 let id = 0;
-loadPlayers();
-loadWords();
-loadCategories();
 
 async function loadPlayers() {
     let data = await getPlayerTable();
     for (const player of data) {
         let date = player.ingreso.slice(0,10);
-        players.push(new Player(player.usuario, player.contraseña, player.puntaje, date, player.administrador));
+        let admin = player.administrador === 1 ? true : false;
+        players.push(new Player(player.usuario, player.contraseña, player.puntaje, date, admin));
     }
 }
 
@@ -26,6 +24,25 @@ async function loadCategories() {
     let data = await getCategoryTable();
     for (const category of data) {
         categories.push(new Category(category.categoria));
+    }
+    console.log(categories)
+}
+
+async function iniciar() {
+    await loadPlayers();
+    await loadWords();
+    await loadCategories();
+
+    if (document.getElementById("categorias")) {
+        loadCategoryHTML();
+    }
+}
+
+iniciar();
+
+const loadCategoryHTML = () => {
+    for (const category of categories) {
+        ui.createCategory(category.id, category.category);
     }
 }
 
@@ -45,7 +62,7 @@ const login = (username, password) => {
 const buttonLogin = () => {
     let username = ui.getUser();
     let password = ui.getPassword();
-    id = login(username, password);
+    let id = login(username, password);
     if (id == 0) {
         ui.showModal("Error", "Contraseña incorrecta.");
     } else if (id < 0) {
