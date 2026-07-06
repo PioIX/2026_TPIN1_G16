@@ -9,10 +9,11 @@
 body {
     min-height: 100vh;
     /* Imagen de fondo cuadriculada */
-    background-image: url('../img/fondo.webp');
+    background-image: url('../img/fondo.jpg');
     background-repeat: repeat;
     background-position: top left;
     background-color: #ffffff; 
+    background-size: 900px;
     
     display: flex;
     justify-content: center;
@@ -32,6 +33,7 @@ body {
 
 /* Títulos y Botones */
 .titulo-ahorcado {
+    font-family:Arial, Helvetica, sans-serif;
     font-size: 2.2rem;
     font-weight: bold;
     letter-spacing: 2px;
@@ -62,6 +64,7 @@ body {
     width: 100%;
     max-width: 220px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
     
     display: inline-flex;
     justify-content: center;
