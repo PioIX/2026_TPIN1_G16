@@ -43,6 +43,9 @@ class UserInterface {
     getCategory() {
         return document.getElementById("category").value;
     }
+    getModalTablas() {
+        return document.getElementById("modalTablas");
+    }
 
 
     // otros
@@ -73,39 +76,46 @@ class UserInterface {
         modal.show();
     }
 
-    showModalTablas(tabla, funcion) {
+    showModalTablas() {
         const modal = new bootstrap.Modal('#modalTablas', {
             keyboard: true,
             focus: true
         });
 
-        inputs(tabla, funcion);
-
         modal.show();
     }
 
-    inputs(tabla, funcion) {
-        let div = document.getElementById("inputsModal").value
-        if (funcion == "Eliminar") {
-            div += '<input id="id" type="number" placeholder="ID">';
+    inputs(tabla, funcion, accion) {
+        let div = "";
+        if (funcion == "Delete") {
+            div += '<div class="grupo-formulario"><input id="id" type="number" placeholder="ID"></div>';
         } else {
-            if (funcion == "Editar") {
-                div += '<input id="id" type="number" placeholder="ID">';
+            if (funcion == "Edit") {
+                div += '<div class="grupo-formulario"><input id="id" type="number" placeholder="ID"></div>';
             }
-            if (tabla == "Jugadores") {
-                div += '<input id="user" placeholder="Username">';
-                div += '<input id="password" type="password" placeholder="Contraseña">';
-                div += '<input id="points" type="number" placeholder="Puntaje">';
-                div += '<input id="signin" type="date" placeholder="Fecha de ingreso">';
-                div += '<label><input id="admin" type="checkbox">Administrador</label>';
-            } else if (tabla == "Palabras") {
-                div += '<input id="word" placeholder="Palabra">';
-                div += '<input id="dificulty" type="number" min="1" max="3" placeholder="Dificultad">';
-                div += '<input id="categoryId" type="number" placeholder="ID Categoria">';
+            if (tabla == "Player") {
+                div += '<div class="grupo-formulario"><input id="username" class="input-texto" placeholder="Username"></div>';
+                div += '<div class="grupo-formulario"><input id="password" class="input-texto" type="password" placeholder="Contraseña"></div>';
+                div += '<div class="grupo-formulario"><input id="points" type="number" placeholder="Puntaje"></div>';
+                div += '<div class="grupo-formulario"><input id="signin" type="date" placeholder="Fecha de ingreso"></div>';
+                div += '<div class="grupo-formulario"><label><input id="admin" type="checkbox">Administrador</label></div>';
+            } else if (tabla == "Word") {
+                div += '<div class="grupo-formulario"><input id="word" class="input-texto" placeholder="Palabra"></div>';
+                div += '<div class="grupo-formulario"><input id="dificulty" class="input-texto" type="number" min="1" max="3" placeholder="Dificultad"></div>';
+                div += '<div class="grupo-formulario"><input id="categoryId" type="number" placeholder="ID Categoria"></div>';
             } else {
-                div += '<input id="category" placeholder="Categoria">';
+                div += '<div class="grupo-formulario"><input id="category" class="input-texto" placeholder="Categoria"></div>';
             }
         }
+        document.getElementById("inputsModal").innerHTML = div;
+        document.getElementById("terminar").onclick = () => {
+            accion();
+            const modal = bootstrap.Modal.getInstance(document.getElementById("modalTablas"));
+            if (modal) {
+                modal.hide();
+            }
+        }
+        this.showModalTablas();
     }
 }
 

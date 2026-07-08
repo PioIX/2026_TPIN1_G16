@@ -2,7 +2,7 @@
 async function getPlayerTable() {
     let res = await fetch('http://localhost:4000/jugadores');
     let response = await res.json();
-
+    
     return response;
 }
 

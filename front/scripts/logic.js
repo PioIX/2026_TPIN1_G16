@@ -25,7 +25,6 @@ async function loadCategories() {
     for (const category of data) {
         categories.push(new Category(category.categoria));
     }
-    console.log(categories)
 }
 
 async function iniciar() {
@@ -35,6 +34,10 @@ async function iniciar() {
 
     if (document.getElementById("categorias")) {
         loadCategoryHTML();
+    }
+
+    if (document.getElementById("tabla")) {
+        loadPlayersTable();
     }
 }
 
@@ -119,6 +122,7 @@ const signOut = () => {
 
 
 // ADMINISTRADOR
+let table;
 const buttonAdmin = () => {
     for (let i = 0; i < players.length; i++) {
         if (players[i].id == id) {
@@ -128,15 +132,49 @@ const buttonAdmin = () => {
         }
     }
 }
+const admin = (funcion) => {
+    let action;
+    switch (table) {
+        case "Player":
+            switch (funcion) {
+                case "Add":
+                    action = buttonAddPlayer;
+                case "Update":
+                    action = buttonUpdatePlayer;
+                case "Delete":
+                    action = buttonErasePlayer;
+            }
+        case "Word":
+            switch (funcion) {
+                case "Add":
+                    action = buttonAddWord;
+                case "Update":
+                    action = buttonUpdateWord;
+                case "Delete":
+                    action = buttonEraseWord;
+            }
+        case "Category":
+            switch (funcion) {
+                case "Add":
+                    action = buttonAddCategory;
+                case "Update":
+                    action = buttonUpdateCategory;
+                case "Delete":
+                    action = buttonEraseCategory;
+            }
+    }
+    ui.inputs(table, funcion, action);
+}
 
 // Jugadores
 // ver tabla usuarios
 const loadPlayersTable = () => {
     let registros = `<tr><th>ID</th><th>Usuario</th><th>Contraseña</th><th>Puntaje</th><th>Ingreso</th><th>Admin</th></tr>`;
     for (let i = 0; i < players.length; i++) {
-        registros += `<tr><td>${players[i].id}</td><td>${players[i].usuario}</td><td>${players[i].contraseña}</td><td>${players[i].puntaje}</td><td>${players[i].ingreso}</td><td>${players[i].admin}</td></tr>`;
+        registros += `<tr><td>${players[i].id}</td><td>${players[i].username}</td><td>${players[i].password}</td><td>${players[i].points}</td><td>${players[i].signIn}</td><td>${players[i].admin}</td></tr>`;
     }
-    document.getElementById("tabla").innerHTML = registros; // hay que hacer la tabla en html
+    document.getElementById("tabla").innerHTML = registros;
+    table = "Player";
 }
 // añadir usuario
 const addPlayer = (user, password, points, signin, admin) => {
@@ -225,9 +263,10 @@ const buttonErasePlayer = () => {
 const loadWordsTable = () => {
     let registros = `<tr><th>ID</th><th>Palabra</th><th>Dificultad</th><th>Categoria</th><th>Admin</th></tr>`;
     for (let i = 0; i < words.length; i++) {
-        registros += `<tr><td>${words[i].id}</td><td>${words[i].palabra}</td><td>${words[i].dificultad}</td><td>${words[i].categoria}</td><td>${words[i].usuario}</td></tr>`;
+        registros += `<tr><td>${words[i].id}</td><td>${words[i].word}</td><td>${words[i].dificulty}</td><td>${words[i].category}</td><td>${words[i].admin}</td></tr>`;
     }
-    document.getElementById("tabla").innerHTML = registros; // hay que hacer la tabla en html
+    document.getElementById("tabla").innerHTML = registros;
+    table = "Word";
 }
 // añadir palabra
 const addWord = (word, dificulty, category) => {
@@ -308,12 +347,13 @@ const buttonEraseWord = () => {
 
 // Categorias
 // ver tabla categorias
-const loadCategoryTable = () => {
+const loadCategoriesTable = () => {
     let registros = `<tr><th>ID</th><th>Categoria</th></tr>`;
     for (let i = 0; i < categories.length; i++) {
-        registros += `<tr><td>${categories[i].id}</td><td>${categories[i].categoria}</td></tr>`
+        registros += `<tr><td>${categories[i].id}</td><td>${categories[i].category}</td></tr>`
     }
-    document.getElementById("tabla").innerHTML = registros; // hay que hacer la tabla en html
+    document.getElementById("tabla").innerHTML = registros;
+    table = "Category";
 }
 // añadir categoria
 const addCategory = (category) => {
@@ -385,3 +425,7 @@ const buttonEraseCategory = () => {
         ui.showModal("Error", "No se encontro la categoria.")
     }
 }
+
+
+// FUNCIONAMIENTO DEL JUEGO
+// elegir palabra
