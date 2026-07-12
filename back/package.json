@@ -10,7 +10,7 @@
   "keywords": [
     "ES"
   ],
-  "author": "Catalina Lazzati y Carolina Casalderrey",
+  "author": "Catalina Lazzati, Carolina Casalderrey, Rosario Flores y Delfina Ibañez",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^2.2.2",
