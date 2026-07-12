@@ -31,7 +31,7 @@ app.post('/jugadores', async function(req,res) {
         if (existe.length == 0) {
             await realizarQuery(`
                 INSERT INTO Jugadores (usuario, contraseña, puntaje, ingreso, administrador) VALUES 
-                ("${req.body.usuario}", "${req.body.contraseña}", ${req.body.puntaje}, "${req.body.ingreso}", ${req.body.admin})
+                ("${req.body.usuario}", "${req.body.contraseña}", ${req.body.puntaje}, "${req.body.ingreso}", ${req.body.administrador})
                 `) ;
             res.send({mensaje:"Club agregado"});
         } else {
@@ -51,7 +51,7 @@ app.put('/jugadores', async function(req,res) {
         console.log(req.body) ;
         let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE id = "${req.body.id}"`) ;
         if (existe.length > 0) {
-            await realizarQuery(`UPDATE Jugadores SET usuario = "${req.body.usuario}", contraseña = "${req.body.contraseña}", puntaje = ${req.body.puntaje}, ingreso = "${req.body.ingreso}", administrador = ${req.body.admin} WHERE id = ${req.body.id}`) ;
+            await realizarQuery(`UPDATE Jugadores SET usuario = "${req.body.usuario}", contraseña = "${req.body.contraseña}", puntaje = ${req.body.puntaje}, ingreso = "${req.body.ingreso}", administrador = ${req.body.administrador} WHERE id = ${req.body.id}`) ;
             res.send({mensaje: "Jugador actualizado"}) ;
         } else {
             throw new Error("Error, este registro no existe todavia") ;
@@ -179,7 +179,7 @@ app.get('/categorias', async function(req,res) {
 app.post('/categorias', async function(req,res) {
     try {
         console.log(req.body);
-        let existe = await realizarQuery(`SELECT * FROM Categorias WHERE id = "${req.body.id}"`);
+        let existe = await realizarQuery(`SELECT * FROM Categorias WHERE categoria = "${req.body.categoria}"`);
         if (existe.length == 0) {
             await realizarQuery(`
                 INSERT INTO Categorias (categoria) VALUES ("${req.body.categoria}")`) ;
