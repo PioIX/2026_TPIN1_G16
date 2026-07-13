@@ -27,13 +27,13 @@ app.get('/jugadores', async function(req,res) {
 app.post('/jugadores', async function(req,res) {
     try {
         console.log(req.body);
-        let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE id = "${req.body.id}"`);
+        let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE id = ${req.body.id}`);
         if (existe.length == 0) {
             await realizarQuery(`
                 INSERT INTO Jugadores (usuario, contraseña, puntaje, ingreso, administrador) VALUES 
-                ("${req.body.usuario}", "${req.body.contraseña}", ${req.body.puntaje}, "${req.body.ingreso}", ${req.body.administrador})
-                `) ;
-            res.send({mensaje:"Club agregado"});
+                ("${req.body.usuario}", "${req.body.contraseña}", ${req.body.puntaje}, "${req.body.ingreso}", ${req.body.administrador})`
+            ) ;
+            res.send({mensaje:"Jugador agregado"});
         } else {
             throw new Error('Este usuario ya esta registrado') ;
         }
@@ -49,7 +49,7 @@ app.post('/jugadores', async function(req,res) {
 app.put('/jugadores', async function(req,res) {
     try {
         console.log(req.body) ;
-        let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE id = "${req.body.id}"`) ;
+        let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE id = ${req.body.id}`) ;
         if (existe.length > 0) {
             await realizarQuery(`UPDATE Jugadores SET usuario = "${req.body.usuario}", contraseña = "${req.body.contraseña}", puntaje = ${req.body.puntaje}, ingreso = "${req.body.ingreso}", administrador = ${req.body.administrador} WHERE id = ${req.body.id}`) ;
             res.send({mensaje: "Jugador actualizado"}) ;
@@ -68,10 +68,10 @@ app.put('/jugadores', async function(req,res) {
 app.delete('/jugadores', async function(req,res) {
     try {
         console.log(req.body) ;
-        let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE id = "${req.body.id}"`) ;
+        let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE id = ${req.body.id}`) ;
         if (existe.length > 0) {
-            await realizarQuery(`DELETE FROM Jugadores WHERE id = "${req.body.id}"`) ;
-            res.send({msg: "Club eliminado"}) ;
+            await realizarQuery(`DELETE FROM Jugadores WHERE id = ${req.body.id}`) ;
+            res.send({msg: "Jugador eliminado"}) ;
         } else {
             throw new Error("Error, este registro no existe todavia") ;
         }
@@ -97,8 +97,7 @@ app.get('/ranking', async function(req,res) {
 // words
 app.get('/palabras', async function(req,res) {
     try {
-        let respuesta = await realizarQuery("SELECT Palabras.id, palabra, dificultad, categoria, usuario FROM Palabras INNER JOIN Categorias ON Categorias.id = Palabras.id_categoria INNER JOIN Jugadores ON Jugadores.id = Palabras.id_admin");
-        res.send(respuesta);
+        let respuesta = await realizarQuery("SELECT * FROM Palabras");
     } catch (error) {
         res.status(500).send('Ha ocurrido un error, intentar más tarde');
     }
@@ -107,12 +106,12 @@ app.get('/palabras', async function(req,res) {
 app.post('/palabras', async function(req,res) {
     try {
         console.log(req.body);
-        let existe = await realizarQuery(`SELECT * FROM Palabras WHERE id = "${req.body.id}"`);
+        let existe = await realizarQuery(`SELECT * FROM Palabras WHERE id = ${req.body.id}`);
         if (existe.length == 0) {
             await realizarQuery(`
                 INSERT INTO Palabras (palabra, dificultad, id_categoria, id_admin) VALUES 
-                ("${req.body.palabra}", "${req.body.dificultad}", ${req.body.id_categoria}, ${req.body.id_admin})
-                `) ;
+                ("${req.body.palabra}", "${req.body.dificultad}", ${req.body.id_categoria}, ${req.body.id_admin})`
+            ) ;
             res.send({mensaje:"Palabra agregada"});
         } else {
             throw new Error('Esta palabra ya esta registrada') ;
@@ -129,7 +128,7 @@ app.post('/palabras', async function(req,res) {
 app.put('/palabras', async function(req,res) {
     try {
         console.log(req.body) ;
-        let existe = await realizarQuery(`SELECT * FROM Palabras WHERE id = "${req.body.id}"`) ;
+        let existe = await realizarQuery(`SELECT * FROM Palabras WHERE id = ${req.body.id}`) ;
         if (existe.length > 0) {
             await realizarQuery(`UPDATE Palabras SET palabra = "${req.body.palabra}", dificultad = "${req.body.dificultad}", id_categoria = ${req.body.id_categoria}, id_admin = ${req.body.id_admin} WHERE id = ${req.body.id}`) ;
             res.send({mensaje: "Palabra actualizada"}) ;
@@ -148,9 +147,9 @@ app.put('/palabras', async function(req,res) {
 app.delete('/palabras', async function(req,res) {
     try {
         console.log(req.body) ;
-        let existe = await realizarQuery(`SELECT * FROM Palabras WHERE id = "${req.body.id}"`) ;
+        let existe = await realizarQuery(`SELECT * FROM Palabras WHERE id = ${req.body.id}`) ;
         if (existe.length > 0) {
-            await realizarQuery(`DELETE FROM Palabras WHERE id = "${req.body.id}"`) ;
+            await realizarQuery(`DELETE FROM Palabras WHERE id = ${req.body.id}`) ;
             res.send({msg: "Palabra eliminada"}) ;
         } else {
             throw new Error("Error, este registro no existe todavia") ;
@@ -196,13 +195,104 @@ app.post('/categorias', async function(req,res) {
     }
 })
 
+app.put('/categorias', async function(req,res) {
+    try {
+        console.log(req.body) ;
+        let existe = await realizarQuery(`SELECT * FROM Categorias WHERE id = ${req.body.id}`) ;
+        if (existe.length > 0) {
+            await realizarQuery(`UPDATE Categorias SET categoria = "${req.body.categoria}" WHERE id = ${req.body.id}`) ;
+            res.send({mensaje: "Categoria actualizada"}) ;
+        } else {
+            throw new Error("Error, este registro no existe todavia") ;
+        }
+    } catch (error) {
+        if (error.message == "Error, este registro no existe todavia") {
+            res.status(500).send(error.message) ;
+        } else {
+            res.status(500).send('Ha ocurrido un error, intentar más tarde') ;
+        }
+    }    
+})
+
 app.delete('/categorias', async function(req,res) {
     try {
         console.log(req.body) ;
-        let existe = await realizarQuery(`SELECT * FROM Categorias WHERE id = "${req.body.id}"`) ;
+        let existe = await realizarQuery(`SELECT * FROM Categorias WHERE id = ${req.body.id}`) ;
         if (existe.length > 0) {
-            await realizarQuery(`DELETE FROM Categorias WHERE id = "${req.body.id}"`) ;
+            await realizarQuery(`DELETE FROM Categorias WHERE id = ${req.body.id}`) ;
             res.send({msg: "Categoria eliminada"}) ;
+        } else {
+            throw new Error("Error, este registro no existe todavia") ;
+        }
+    } catch (error) {
+        if (error.message == "Error, este registro no existe todavia") {
+            res.status(500).send(error.message) ;
+        } else {
+            res.status(500).send('Ha ocurrido un error, intentar más tarde') ;
+        }
+    }    
+})
+
+
+
+// games
+app.get('/partidas', async function(req,res) {
+    try {
+        let respuesta = await realizarQuery("SELECT * FROM Partidas");
+        res.send(respuesta);
+    } catch (error) {
+        res.status(500).send('Ha ocurrido un error, intentar más tarde');
+    }
+})
+
+app.post('/partidas', async function(req,res) {
+    try {
+        console.log(req.body);
+        let existe = await realizarQuery(`SELECT * FROM Partidas WHERE id = ${req.body.id}`);
+        if (existe.length == 0) {
+            await realizarQuery(`
+                INSERT INTO Partidas (id_palabra, id_jugador, intentos_usados, puntaje) VALUES 
+                (${req.body.id_palabra}, ${req.body.id_jugador}, ${req.body.intentos_usados}, ${req.body.puntaje})`
+            ) ;
+            res.send({mensaje:"Partida agregada"});
+        } else {
+            throw new Error('Esta partida ya esta registrada') ;
+        }
+    } catch (error) {
+        if (error.message == 'Esta partida ya esta registrada') {
+            res.status(500).send(error.message) ;
+        } else {
+            res.status(500).send('Ha ocurrido un error, intentar más tarde') ;
+        }
+    }
+})
+
+app.put('/partidas', async function(req,res) {
+    try {
+        console.log(req.body) ;
+        let existe = await realizarQuery(`SELECT * FROM Partidas WHERE id = ${req.body.id}`) ;
+        if (existe.length > 0) {
+            await realizarQuery(`UPDATE Partidas SET id_palabra = ${req.body.id_palabra}, id_jugador = ${req.body.id_jugador}, intentos_usados = ${req.body.intentos_usados}, puntaje = ${req.body.puntaje} WHERE id = ${req.body.id}`) ;
+            res.send({mensaje: "Partida actualizada"}) ;
+        } else {
+            throw new Error("Error, este registro no existe todavia") ;
+        }
+    } catch (error) {
+        if (error.message == "Error, este registro no existe todavia") {
+            res.status(500).send(error.message) ;
+        } else {
+            res.status(500).send('Ha ocurrido un error, intentar más tarde') ;
+        }
+    }    
+})
+
+app.delete('/partidas', async function(req,res) {
+    try {
+        console.log(req.body) ;
+        let existe = await realizarQuery(`SELECT * FROM Partidas WHERE id = ${req.body.id}`) ;
+        if (existe.length > 0) {
+            await realizarQuery(`DELETE FROM Categorias WHERE id = ${req.body.id}`) ;
+            res.send({msg: "Partida eliminada"}) ;
         } else {
             throw new Error("Error, este registro no existe todavia") ;
         }
