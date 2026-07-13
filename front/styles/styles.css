@@ -302,9 +302,10 @@ body {
 .tabla-contenedor{
     width: 700px;
     margin-top: 25px;
+    margin-bottom: 25px;
 }
 
-.tabla-admin{
+.tabla{
     width: 100%;
     border-collapse: collapse;
     background: white;

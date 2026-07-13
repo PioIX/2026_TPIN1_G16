@@ -14,6 +14,9 @@
 </head>
 <body onload="loadPlayersTable()">
   <div class="contenedor-vista-admin">
+      <a href="categorias.html" class="enlace-volver" title="Volver a categorías">
+        <img src="img/flecha.png" alt="Flecha para volver atrás">
+      </a>
       <h1 class="titulo-ahorcado">ADMINISTRADOR</h1>
       <div class="caja-principal-admin">
           <h2>¿Que vamos a modificar hoy?</h2>
@@ -21,12 +24,13 @@
             <button class="boton-principal" id="usuario" onclick="loadPlayersTable()">Usuarios</button>
             <button class="boton-principal" id="categoria" onclick="loadCategoriesTable()">Categorias</button>
             <button class="boton-principal" id="palabra" onclick="loadWordsTable()">Palabras</button>
+            <button class="boton-principal" id="partida" onclick="loadGamesTable()">Partidas</button>
           </div>
       </div>
   </div>
 
   <div class="tabla-contenedor">
-    <table class="tabla-admin" id="tabla"></table>
+    <table class="tabla" id="tabla"></table>
   </div>
 
   <div class="lista-botones">
