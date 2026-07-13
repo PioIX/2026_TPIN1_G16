@@ -64,6 +64,7 @@
             </div>
         </div>
     </div>
+
     <div id="modal" class="modal fade" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-personalizado">
@@ -76,6 +77,40 @@
           </div>
           <div class="modal-footer modal-footer-personalizado">
             <button type="button" class="boton-principal" data-bs-dismiss="modal">¡Listo!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalNoWords" class="modal fade" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-personalizado">
+          <div class="modal-header modal-header-personalizado">
+            <h5 class="modal-title titulo-modal">Categoria completada</h5>
+          </div>
+          <div class="modal-body modal-cuerpo">
+            <p>Ya jugaste todas las palabras de esta categoria, intente con otra categoria.</p>
+          </div>
+          <div class="modal-footer modal-footer-personalizado">
+            <a href="categorias.html" type="button" class="boton-principal" data-bs-dismiss="modal">Menu</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalGame" class="modal fade" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-personalizado">
+          <div class="modal-header modal-header-personalizado">
+            <h5 class="modal-title titulo-modal" id="modalTitle"></h5>
+            <button type="button" class="btn-close boton-cerrar-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body modal-cuerpo">
+            <p id="modalBody"></p>
+          </div>
+          <div class="modal-footer modal-footer-personalizado">
+            <a href="categorias.html" type="button" class="boton-secundario" data-bs-dismiss="modal">Menu</a>
+            <a onclick="window.location.reload()" type="button" class="boton-principal" data-bs-dismiss="modal">Siguiente Palabra</a>
           </div>
         </div>
       </div>
