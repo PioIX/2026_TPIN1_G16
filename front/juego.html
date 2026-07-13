@@ -12,7 +12,7 @@
     <title>Ahorcado - Jugando</title>
     <link rel="stylesheet" href="styles/styles.css">
 </head>
-<body>
+<body onload="prepareGame()">
 
     <div class="contenedor-vista">
         <a href="categorias.html" class="enlace-volver" title="Volver a categorías">
@@ -21,50 +21,46 @@
         <h1 class="titulo-ahorcado">AHORCADO</h1>
 
         <div class="zona-ahorcado">
+          <img src="img/6.png" alt="ahorcado" title="ahorcado" id="ahorcado">
         </div>
 
         <div class="zona-palabra">
-            <span class="letra-linea"></span>
-            <span class="letra-linea"></span>
-            <span class="letra-linea"></span>
-            <span class="letra-linea"></span>
-            <span class="letra-linea"></span>
-            <span class="letra-linea"></span>
+          <p id="palabraEscondida"></p>
         </div>
 
         <div class="teclado">
             <div class="teclado-fila">
-                <button class="tecla">A</button>
-                <button class="tecla">B</button>
-                <button class="tecla">C</button>
-                <button class="tecla">D</button>
-                <button class="tecla">E</button>
-                <button class="tecla">F</button>
-                <button class="tecla">G</button>
-                <button class="tecla">H</button>
-                <button class="tecla">I</button>
+                <button class="tecla" id="A" onclick="checkLetter('A')">A</button>
+                <button class="tecla" id="B" onclick="checkLetter('B')">B</button>
+                <button class="tecla" id="C" onclick="checkLetter('C')">C</button>
+                <button class="tecla" id="D" onclick="checkLetter('D')">D</button>
+                <button class="tecla" id="E" onclick="checkLetter('E')">E</button>
+                <button class="tecla" id="F" onclick="checkLetter('F')">F</button>
+                <button class="tecla" id="G" onclick="checkLetter('G')">G</button>
+                <button class="tecla" id="H" onclick="checkLetter('H')">H</button>
+                <button class="tecla" id="I" onclick="checkLetter('I')">I</button>
             </div>
             <div class="teclado-fila">
-                <button class="tecla">J</button>
-                <button class="tecla">K</button>
-                <button class="tecla">L</button>
-                <button class="tecla">M</button>
-                <button class="tecla">N</button>
-                <button class="tecla">Ñ</button>
-                <button class="tecla">O</button>
-                <button class="tecla">P</button>
-                <button class="tecla">Q</button>
+                <button class="tecla" id="J" onclick="checkLetter('J')">J</button>
+                <button class="tecla" id="K" onclick="checkLetter('K')">K</button>
+                <button class="tecla" id="L" onclick="checkLetter('L')">L</button>
+                <button class="tecla" id="M" onclick="checkLetter('M')">M</button>
+                <button class="tecla" id="N" onclick="checkLetter('N')">N</button>
+                <button class="tecla" id="Ñ" onclick="checkLetter('Ñ')">Ñ</button>
+                <button class="tecla" id="O" onclick="checkLetter('O')">O</button>
+                <button class="tecla" id="P" onclick="checkLetter('P')">P</button>
+                <button class="tecla" id="Q" onclick="checkLetter('Q')">Q</button>
             </div>
             <div class="teclado-fila">
-                <button class="tecla">R</button>
-                <button class="tecla">S</button>
-                <button class="tecla">T</button>
-                <button class="tecla">U</button>
-                <button class="tecla">V</button>
-                <button class="tecla">W</button>
-                <button class="tecla">X</button>
-                <button class="tecla">Y</button>
-                <button class="tecla">Z</button>
+                <button class="tecla" id="R" onclick="checkLetter('R')">R</button>
+                <button class="tecla" id="S" onclick="checkLetter('S')">S</button>
+                <button class="tecla" id="T" onclick="checkLetter('T')">T</button>
+                <button class="tecla" id="U" onclick="checkLetter('U')">U</button>
+                <button class="tecla" id="V" onclick="checkLetter('V')">V</button>
+                <button class="tecla" id="W" onclick="checkLetter('W')">W</button>
+                <button class="tecla" id="X" onclick="checkLetter('X')">X</button>
+                <button class="tecla" id="Y" onclick="checkLetter('Y')">Y</button>
+                <button class="tecla" id="Z" onclick="checkLetter('Z')">Z</button>
             </div>
         </div>
     </div>
@@ -90,8 +86,9 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-    <script src="scripts/classes/player.js"></script>
-    <script src="scripts/classes/word.js"></script>
+    <script src="scripts/classes/Category.js"></script>
+    <script src="scripts/classes/Player.js"></script>
+    <script src="scripts/classes/Word.js"></script>
     <script src="scripts/classes/game.js"></script>
     <script src="scripts/requests.js"></script>
     <script src="scripts/dom.js"></script>
