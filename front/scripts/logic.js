@@ -514,7 +514,7 @@ const updateGame = (idGame, word, player, attemptsUsed, point) => {
             games[i].player = player;
             games[i].attempts = attemptsUsed;
             games[i].points = point;
-            putCategory({id_palabra: word, id_jugador: player, intentos_usados: attemptsUsed, puntaje: point, id: idGame});
+            putGame({id_palabra: word, id_jugador: player, intentos_usados: attemptsUsed, puntaje: point, id: idGame});
             update = true;
         }
     }

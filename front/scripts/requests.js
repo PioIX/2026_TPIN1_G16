@@ -128,8 +128,70 @@ async function postCategory(category) {
     return response;
 }
 
+async function putCategory(category) {
+    const res = await fetch('http://localhost:4000/categorias', {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(category)
+    })
+    let response = await res.json();
+
+    return response;
+}
+
 async function deleteCategory(id) {
     const res = await fetch('http://localhost:4000/categorias', {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(id)
+    })
+    let response = await res.json();
+
+    return response;
+}
+
+
+
+// tabla partidas
+async function getGameTable() {
+    let res = await fetch('http://localhost:4000/partidas');
+    let response = await res.json();
+
+    return response;
+}
+
+async function postGame(game) {
+    const res = await fetch('http://localhost:4000/partidas', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(game)
+    })
+    let response = await res.json();
+    
+    return response;
+}
+
+async function putGame(game) {
+    const res = await fetch('http://localhost:4000/partidas', {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(game)
+    })
+    let response = await res.json();
+
+    return response;
+}
+
+async function deleteGame(id) {
+    const res = await fetch('http://localhost:4000/partidas', {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json",
