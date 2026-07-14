@@ -27,7 +27,7 @@ app.get('/jugadores', async function(req,res) {
 app.post('/jugadores', async function(req,res) {
     try {
         console.log(req.body);
-        let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE id = ${req.body.id}`);
+        let existe = await realizarQuery(`SELECT * FROM Jugadores WHERE usuario = "${req.body.usuario}"`);
         if (existe.length == 0) {
             await realizarQuery(`
                 INSERT INTO Jugadores (usuario, contraseña, puntaje, ingreso, administrador) VALUES 
@@ -98,6 +98,7 @@ app.get('/ranking', async function(req,res) {
 app.get('/palabras', async function(req,res) {
     try {
         let respuesta = await realizarQuery("SELECT * FROM Palabras");
+        res.send(respuesta);
     } catch (error) {
         res.status(500).send('Ha ocurrido un error, intentar más tarde');
     }
@@ -106,7 +107,7 @@ app.get('/palabras', async function(req,res) {
 app.post('/palabras', async function(req,res) {
     try {
         console.log(req.body);
-        let existe = await realizarQuery(`SELECT * FROM Palabras WHERE id = ${req.body.id}`);
+        let existe = await realizarQuery(`SELECT * FROM Palabras WHERE palabra = "${req.body.palabra}"`);
         if (existe.length == 0) {
             await realizarQuery(`
                 INSERT INTO Palabras (palabra, dificultad, id_categoria, id_admin) VALUES 
@@ -248,22 +249,13 @@ app.get('/partidas', async function(req,res) {
 app.post('/partidas', async function(req,res) {
     try {
         console.log(req.body);
-        let existe = await realizarQuery(`SELECT * FROM Partidas WHERE id = ${req.body.id}`);
-        if (existe.length == 0) {
-            await realizarQuery(`
-                INSERT INTO Partidas (id_palabra, id_jugador, intentos_usados, puntaje) VALUES 
-                (${req.body.id_palabra}, ${req.body.id_jugador}, ${req.body.intentos_usados}, ${req.body.puntaje})`
-            ) ;
-            res.send({mensaje:"Partida agregada"});
-        } else {
-            throw new Error('Esta partida ya esta registrada') ;
-        }
+        await realizarQuery(`
+            INSERT INTO Partidas (id_palabra, id_jugador, intentos_usados, puntaje) VALUES 
+            (${req.body.id_palabra}, ${req.body.id_jugador}, ${req.body.intentos_usados}, ${req.body.puntaje})`
+        ) ;
+        res.send({mensaje:"Partida agregada"});
     } catch (error) {
-        if (error.message == 'Esta partida ya esta registrada') {
-            res.status(500).send(error.message) ;
-        } else {
-            res.status(500).send('Ha ocurrido un error, intentar más tarde') ;
-        }
+        res.status(500).send('Ha ocurrido un error, intentar más tarde') ;
     }
 })
 
@@ -291,7 +283,7 @@ app.delete('/partidas', async function(req,res) {
         console.log(req.body) ;
         let existe = await realizarQuery(`SELECT * FROM Partidas WHERE id = ${req.body.id}`) ;
         if (existe.length > 0) {
-            await realizarQuery(`DELETE FROM Categorias WHERE id = ${req.body.id}`) ;
+            await realizarQuery(`DELETE FROM Partidas WHERE id = ${req.body.id}`) ;
             res.send({msg: "Partida eliminada"}) ;
         } else {
             throw new Error("Error, este registro no existe todavia") ;

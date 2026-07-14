@@ -49,11 +49,11 @@ async function rankingPlayer() {
     let res = await fetch('http://localhost:4000/ranking');
     let response = await res.json();
 
-    let registros;
+    let registros = "<tr><th>Usuario</th><th>Puntaje</th></tr>";
     for (i = 0; i < response.length; i++) {
         registros += `<tr><td>${response[i].usuario}</td><td>${response[i].puntaje}</td></tr>`;
     }
-    document.getElementById("tablaRanking").innerHTML += registros;
+    document.getElementById("tablaRanking").innerHTML = registros;
 }
 
 

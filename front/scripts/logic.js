@@ -1,36 +1,40 @@
 // INICIALIZACION
 // Variables globales
-let players = [];
-let words = [];
-let categories = [];
-let games = [];
+let players;
+let words;
+let categories;
+let games;
 let id;
 
 // Cargando las variables globales
 async function loadPlayers() {
+    players = [];
     let data = await getPlayerTable();
     for (const player of data) {
         let date = player.ingreso.slice(0,10);
-        let admin = player.administrador === 1 ? true : false;
-        players.push(new Player(player.usuario, player.contraseña, player.puntaje, date, admin));
+        let admin = player.administrador == 1 ? true : false;
+        players.push(new Player(player.usuario, player.contraseña, player.puntaje, date, admin, player.id));
     }
 }
 async function loadWords() {
+    words = [];
     let data = await getWordTable();
     for (const word of data) {
-        words.push(new Word(word.palabra, word.dificultad, word.categoria, word.usuario));
+        words.push(new Word(word.palabra, word.dificultad, word.id_categoria, word.id_admin, word.id));
     }
 }
 async function loadCategories() {
+    categories = [];
     let data = await getCategoryTable();
     for (const category of data) {
-        categories.push(new Category(category.categoria));
+        categories.push(new Category(category.categoria, category.id));
     }
 }
 async function loadGames() {
+    games = [];
     let data = await getGameTable();
     for (const game of data) {
-        games.push(new Game(game.id_palabra, game.id_jugador, game.intentos_usados, game.puntaje));
+        games.push(new Game(game.id_palabra, game.id_jugador, game.intentos_usados, game.puntaje, game.id));
     }
 }
 // Id
@@ -38,46 +42,34 @@ const saveData = () => {
     localStorage.setItem("id", id);
 }
 const loadData = () => {
-    return localStorage.getItem("id");
-}
-
-async function iniciar() {
-    await loadPlayers();
-    await loadWords();
-    await loadCategories();
-    await loadGames();
-
-    let currentId = loadData()
+    let currentId = localStorage.getItem("id");
     if (currentId) {
         id = Number(currentId);
     } else {
         id = 0;
     }
-
-    if (document.getElementById("categorias")) {
-        buttonAdmin();
-        loadCategoryHTML();
-    }
-
-    if (document.getElementById("tabla")) {
-        loadPlayersTable();
-    }
 }
-iniciar();
 
 // cargar botones de categorias en categorias.html
-const loadCategoryHTML = () => {
+async function loadCategoryHTML () {
+    await loadCategories();
     for (const category of categories) {
-        ui.createCategory(category.id, category.category);
+        ui.createCategory(category.id, category.categoria);
     }
+    await loadPlayers();
+    loadData();
+    buttonAdmin();
 }
 
 // USUARIO
+async function iniciarUser() {
+    await loadPlayers();
+}
 // Login
 const login = (username, password) => {
     for (let i = 0; i < players.length; i++) {
-        if (players[i].username == username) {
-            if (players[i].password == password) {
+        if (players[i].usuario === username) {
+            if (players[i].contraseña === password) {
                 return players[i].id;
             } else {
                 return 0;
@@ -89,8 +81,8 @@ const login = (username, password) => {
 const buttonLogin = () => {
     let username = ui.getUser();
     let password = ui.getPassword();
-    let id = login(username, password);
-    if (id == 0) {
+    id = login(username, password);
+    if (id === 0) {
         ui.showModal("Error", "Contraseña incorrecta.");
     } else if (id < 0) {
         ui.showModal("Error", "El usuario no existe.");
@@ -100,20 +92,20 @@ const buttonLogin = () => {
     }
 }
 // Registro
-const register = (username, password, password2) => {
+async function register (username, password, password2) {
     let exist = 0;
     for (let i = 0; i < players.length; i++) {
-        if (players[i].username == username) {
+        if (players[i].usuario === username) {
             exist++;
         }
     }
-    if (exist == 0) {
-        if (password == password2) {
+    if (exist === 0) {
+        if (password === password2) {
             let date = new Date();
             let today = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
             let player = new Player(username, password, 0, today, false);
             players.push(player);
-            postPlayer({usuario: username, contraseña: password, puntaje: 0, ingreso: today, administrador: false});
+            await postPlayer({usuario: username, contraseña: password, puntaje: 0, ingreso: today, administrador: false});
             return player.id;
         } else {
             return -1;
@@ -122,12 +114,12 @@ const register = (username, password, password2) => {
         return 0;
     }   
 }
-const buttonRegister = () => {
+async function buttonRegister () {
     let username = ui.getUser();
     let password = ui.getPassword();
     let password2 = ui.getSecondPassword();
-    id = register(username, password, password2);
-    if (id == 0) {
+    id = await register(username, password, password2);
+    if (id === 0) {
         ui.showModal("Error", "Este usuario ya existe.");
     } else if (id < 0) {
         ui.showModal("Error", "Contraseña no coincide.");
@@ -152,24 +144,29 @@ const signOut = () => {
 // inicializacion de la pagina
 const buttonResetAdmin = () => {
     for (let i = 0; i < players.length; i++) {
-        if (players[i].id == id) {
-            if (players[i].admin) {
+        if (players[i].id === id) {
+            if (players[i].administrador) {
                 document.getElementById("btnReset").style.display = "block";
             }
         }
     }
 }
-const iniciarRanking = () => {
-    rankingPlayer();
+async function iniciarRanking () {
+    await rankingPlayer();
+    await loadPlayers();
+    loadData();
     buttonResetAdmin();
 }
 // resetear ranking (resetear los puntos de todos los usuarios)
-const resetRanking = () => {
+const modalReset = () => {
+    ui.showModalReset();
+}
+async function resetRanking () {
     for (let i = 0; i < players.length; i++) {
-        players[i].points = 0;
-        putPlayer({usuario: players[i].username, contraseña: players[i].password, puntaje: 0, ingreso: players[i].signIn, administrador: players[i].admin, id: players[i].id});
+        players[i].puntaje = 0;
+        putPlayer({usuario: players[i].usuario, contraseña: players[i].contraseña, puntaje: 0, ingreso: players[i].ingreso, administrador: players[i].administrador, id: players[i].id});
     }
-    rankingPlayer();
+    await rankingPlayer();
 }
 
 
@@ -179,8 +176,9 @@ const resetRanking = () => {
 let table;
 const buttonAdmin = () => {
     for (let i = 0; i < players.length; i++) {
-        if (players[i].id == id) {
-            if (players[i].admin) {
+        if (players[i].id === id) {
+            if (players[i].administrador === true) {
+                document.getElementById("btnAdmin").classList.remove("admin");
                 document.getElementById("btnAdmin").style.display = "block";
             }
         }
@@ -193,365 +191,451 @@ const admin = (funcion) => {
             switch (funcion) {
                 case "Add":
                     action = buttonAddPlayer;
+                    break;
                 case "Update":
                     action = buttonUpdatePlayer;
+                    break;
                 case "Delete":
                     action = buttonErasePlayer;
+                    break;
             }
+            break;
         case "Word":
             switch (funcion) {
                 case "Add":
                     action = buttonAddWord;
+                    break;
                 case "Update":
                     action = buttonUpdateWord;
+                    break;
                 case "Delete":
                     action = buttonEraseWord;
+                    break;
             }
+            break;
         case "Category":
             switch (funcion) {
                 case "Add":
                     action = buttonAddCategory;
+                    break;
                 case "Update":
                     action = buttonUpdateCategory;
+                    break;
                 case "Delete":
                     action = buttonEraseCategory;
+                    break;
             }
+            break;
+        case "Game":
+            switch (funcion) {
+                case "Add":
+                    action = buttonAddGame;
+                    break;
+                case "Update":
+                    action = buttonUpdateGame;
+                    break;
+                case "Delete":
+                    action = buttonEraseGame;
+                    break;
+            }
+            break;
     }
     ui.inputs(table, funcion, action);
 }
 
 // Jugadores
 // ver tabla usuarios
-const loadPlayersTable = () => {
+async function loadPlayersTable () {
+    await loadPlayers();
     let registros = `<tr><th>ID</th><th>Usuario</th><th>Contraseña</th><th>Puntaje</th><th>Ingreso</th><th>Admin</th></tr>`;
     for (let i = 0; i < players.length; i++) {
-        registros += `<tr><td>${players[i].id}</td><td>${players[i].username}</td><td>${players[i].password}</td><td>${players[i].points}</td><td>${players[i].signIn}</td><td>${players[i].admin}</td></tr>`;
+        registros += `<tr><td>${players[i].id}</td><td>${players[i].usuario}</td><td>${players[i].contraseña}</td><td>${players[i].puntaje}</td><td>${players[i].ingreso}</td><td>${players[i].administrador}</td></tr>`;
     }
     document.getElementById("tabla").innerHTML = registros;
     table = "Player";
 }
 // añadir usuario
-const addPlayer = (user, password, points, signin, admin) => {
+async function addPlayer (user, password, points, signin, admin) {
     let exist = 0;
     for (let i = 0; i < players.length; i++) {
-        if (players[i].username == user) {
+        if (players[i].usuario === user) {
             exist++;
         }
     }
-    if (exist == 0) {
+    if (exist === 0) {
         let object = new Player(user, password, points, signin, admin);
         players.push(object);
-        postPlayer({usuario: user, contraseña: password, puntaje: points, ingreso: signin, administrador: admin});
+        await postPlayer({usuario: user, contraseña: password, puntaje: points, ingreso: signin, administrador: admin});
         return object.id;
     } else {
         return 0;
     }
 }
-const buttonAddPlayer = () => {
+async function buttonAddPlayer () {
     let user = ui.getUser();
     let password = ui.getPassword();
     let points = ui.getPoints();
     let signin = ui.getSignIn();
     let admin = ui.getAdmin();
-    let userId = ui.register(user, password, points, signin, admin);
-    if (userId == 0) {
-        ui.showModal("Error", "Este usuario ya existe.");
+    if (!user || !password || !points || !signin) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.")
     } else {
-        loadPlayersTable();
+        let userId = await addPlayer(user, password, points, signin, admin);
+        if (userId === 0) {
+            ui.showModal("Error", "Este usuario ya existe.");
+        } else {
+            await loadPlayersTable();
+        }
     }
 }
 // actualizar usuario
-const updatePlayer = (idUser, user, password, points, signin, admin) => {
+async function updatePlayer (idUser, user, password, points, signIn, admin) {
     let update = false;
     for (let i = 0; i < players.length; i++) {
-        if (players[i].id == idUser) {
-            players[i].username = user;
-            players[i].password = password;
-            players[i].points = points;
-            players[i].signIn = signin;
-            players[i].admin = admin;
-            putPlayer({usuario: user, contraseña: password, puntaje: points, ingreso: signIn, administrador: admin, id: idUser});
+        if (players[i].id === idUser) {
+            players[i].usuario = user;
+            players[i].contraseña = password;
+            players[i].puntaje = points;
+            players[i].ingreso = signIn;
+            players[i].administrador = admin;
+            await putPlayer({usuario: user, contraseña: password, puntaje: points, ingreso: signIn, administrador: admin, id: idUser});
             update = true;
         }
     }
     return update;
 }
-const buttonUpdatePlayer = () => {
+async function buttonUpdatePlayer () {
     let idUser = ui.getId();
     let user = ui.getUser();
     let password = ui.getPassword();
     let points = ui.getPoints();
     let signin = ui.getSignIn();
     let admin = ui.getAdmin();
-    let update = updatePlayer(idUser, user, password, points, signin, admin);
-    if (update) {
-        loadPlayersTable();
+    if (!idUser || !user || !password || !points || !signin) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
     } else {
-        ui.showModal("Error", "No se encontro el registro.");
+        let update = await updatePlayer(idUser, user, password, points, signin, admin);
+        if (update) {
+            await loadPlayersTable();
+        } else {
+            ui.showModal("Error", "No se encontro el registro.");
+        }
     }
 }
 // eliminar usuario
-const erasePlayer = (idUser) => {
+async function erasePlayer (idUser) {
     let erase = false;
     for (let i = 0; i < players.length; i++) {
-        if (players[i].id == idUser) {
+        if (players[i].id === idUser) {
             players.splice(i, 1);
-            deletePlayer({id: idUser});
+            await deletePlayer({id: idUser});
             erase = true;
         }
     }
     return erase;
 }
-const buttonErasePlayer = () => {
+async function buttonErasePlayer () {
     let idUser = ui.getId();
-    let erase = erasePlayer(idUser);
-    if (erase) {
-        loadPlayersTable();
+    if (!idUser) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
     } else {
-        ui.showModal("Error", "No se encontro el registro.")
+        let erase = await erasePlayer(idUser);
+        if (erase) {
+            await loadPlayersTable();
+        } else {
+            ui.showModal("Error", "No se encontro el registro.")
+        }
     }
 }
 
 // Palabras
 // ver tabla palabras
-const loadWordsTable = () => {
+async function loadWordsTable () {
+    await loadWords();
     let registros = `<tr><th>ID</th><th>Palabra</th><th>Dificultad</th><th>Categoria</th><th>Admin</th></tr>`;
     for (let i = 0; i < words.length; i++) {
-        registros += `<tr><td>${words[i].id}</td><td>${words[i].word}</td><td>${words[i].dificulty}</td><td>${words[i].category}</td><td>${words[i].admin}</td></tr>`;
+        registros += `<tr><td>${words[i].id}</td><td>${words[i].palabra}</td><td>${words[i].dificultad}</td><td>${words[i].id_categoria}</td><td>${words[i].id_admin}</td></tr>`;
     }
     document.getElementById("tabla").innerHTML = registros;
     table = "Word";
 }
 // añadir palabra
-const addWord = (word, dificulty, category) => {
+async function addWord (word, dificulty, category) {
     let exist = 0;
     for (let i = 0; i < words.length; i++) {
-        if (words[i].word == word) {
+        if (words[i].palabra === word) {
             exist++;
         }
     }
-    if (exist == 0) {
+    if (exist === 0) {
+        loadData();
         let object = new Word(word, dificulty, category, id);
         words.push(object);
-        postWord({palabra: word, dificultad: dificulty, id_categoria: category, id_admin: id});
+        await postWord({palabra: word, dificultad: dificulty, id_categoria: category, id_admin: id});
         return object.id;
     } else {
         return 0;
     }
 }
-const buttonAddWord = () => {
+async function buttonAddWord () {
     let word = ui.getWord();
     let dificulty = ui.getDificulty();
     let category = ui.getCategoryId();
-    let object = addWord(word, dificulty, category);
-    if (object > 0) {
-        loadWordsTable();
+    if (!word || !dificulty || !category) {
+        if (dificulty === 0) {
+            ui.showModal("Error", "La dificultad debe ser del 1 al 3, no se aceptan otros numeros.");
+        } else {
+            ui.showModal("Error", "No completaste todos los datos necesarios.");
+        }
     } else {
-        ui.showModal("Error", "Ya existe este registro.")
+        let object = await addWord(word, dificulty, category);
+        if (object > 0) {
+            await loadWordsTable();
+        } else {
+            ui.showModal("Error", "Ya existe este registro.")
+        }
     }
 }
 // actualizar palabra
-const updateWord = (idWord, word, dificulty, category) => {
+async function updateWord (idWord, word, dificulty, category) {
     let update = false;
     for (let i = 0; i < words.length; i++) {
-        if (words[i].id == idWord) {
-            words[i].word = word;
-            words[i].dificulty = dificulty;
-            words[i].category = category;
-            words[i].admin = id;
-            putWord({palabra: word, dificultad: dificulty, id_categoria: category, id_admin: id, id: idWord});
+        if (words[i].id === idWord) {
+            words[i].palabra = word;
+            words[i].dificultad = dificulty;
+            words[i].id_categoria = category;
+            words[i].id_admin = id;
+            await putWord({palabra: word, dificultad: dificulty, id_categoria: category, id_admin: id, id: idWord});
             update = true;
         }
     }
     return update;
 }
-const buttonUpdateWord = () => {
+async function buttonUpdateWord () {
     let idWord = ui.getId();
     let word = ui.getWord();
     let dificulty = ui.getDificulty();
     let category = ui.getCategoryId();
-    let update = updateWord(idWord, word, dificulty, category);
-    if (update) {
-        loadWordsTable();
+    if (!idWord || !Word || !dificulty || !category) {
+        if (dificulty === 0) {
+            ui.showModal("Error", "La dificultad debe ser del 1 al 3, no se aceptan otros numeros.");
+        } else {
+            ui.showModal("Error", "No completaste todos los datos necesarios.");
+        }
     } else {
-        ui.showModal("Error", "No se encontro el registro.")
+        let update = await updateWord(idWord, word, dificulty, category);
+        if (update) {
+            await loadWordsTable();
+        } else {
+            ui.showModal("Error", "No se encontro el registro.")
+        }
     }
 }
 // eliminar palabra
-const eraseWord = (idWord) => {
+async function eraseWord (idWord) {
     let erase = false;
     for (let i = 0; i < words.length; i++) {
-        if (words[i].id == idWord) {
+        if (words[i].id === idWord) {
             words.splice(i, 1);
-            deleteWord({id: idWord});
+            await deleteWord({id: idWord});
             erase = true;
         }
     }
     return erase;
 }
-const buttonEraseWord = () => {
+async function buttonEraseWord () {
     let idWord = ui.getId();
-    let erase = eraseWord(idWord);
-    if (erase) {
-        loadWordsTable();
+    if (!idWord) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
     } else {
-        ui.showModal("Error", "No se encontro el registro.")
+        let erase = await eraseWord(idWord);
+        if (erase) {
+            await loadWordsTable();
+        } else {
+            ui.showModal("Error", "No se encontro el registro.")
+        }
     }
 }
 
 // Categorias
 // ver tabla categorias
-const loadCategoriesTable = () => {
+async function  loadCategoriesTable () {
+    await loadCategories();
     let registros = `<tr><th>ID</th><th>Categoria</th></tr>`;
     for (let i = 0; i < categories.length; i++) {
-        registros += `<tr><td>${categories[i].id}</td><td>${categories[i].category}</td></tr>`
+        registros += `<tr><td>${categories[i].id}</td><td>${categories[i].categoria}</td></tr>`
     }
     document.getElementById("tabla").innerHTML = registros;
     table = "Category";
 }
 // añadir categoria
-const addCategory = (category) => {
+async function addCategory (category) {
     let exist = 0;
     for (let i = 0; i < categories.length; i++) {
-        if (categories[i].category == category) {
+        if (categories[i].categoria === category) {
             exist++;
         }
     }
-    if (exist == 0) {
+    if (exist === 0) {
         let object = new Category(category);
         categories.push(object);
-        postCategory({categoria: category});
+        await postCategory({categoria: category});
         return object.id;
     } else {
         return 0;
     }
 }
-const buttonAddCategory = () => {
+async function buttonAddCategory () {
     let category = ui.getCategory();
-    let object = addCategory(category);
-    if (object > 0) {
-        loadCategoryTable();
-        ui.createCategory();
+    if (!category) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
     } else {
-        ui.showModal("Error", "Ya existe este registro.")
+        let object = await addCategory(category);
+        if (object > 0) {
+            await loadCategoriesTable();
+            ui.createCategory();
+        } else {
+            ui.showModal("Error", "Ya existe este registro.")
+        }
     }
 }
 // editar categoria
-const updateCategory = (idCategory, category) => {
+async function updateCategory (idCategory, category) {
     let update = false;
     for (let i = 0; i < categories.length; i++) {
-        if (categories[i].id == idCategory) {
-            categories[i].category = category;
-            putCategory({categoria: category, id: idCategory});
+        if (categories[i].id === idCategory) {
+            categories[i].categoria = category;
+            await putCategory({categoria: category, id: idCategory});
             update = true;
         }
     }
     return update;
 }
-const buttonUpdateCategory = () => {
+async function buttonUpdateCategory () {
     let idCategory = ui.getId();
     let category = ui.getCategory();
-    let update = updateWord(idCategory, category);
-    if (update) {
-        loadCategoriesTable();
+    if (!idCategory || !category) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
     } else {
-        ui.showModal("Error", "No se encontro el registro.")
+        let update = await updateCategory(idCategory, category);
+        if (update) {
+            await loadCategoriesTable();
+        } else {
+            ui.showModal("Error", "No se encontro el registro.")
+        }
     }
 }
 // eliminar categoria
-const eraseCategory = (idCategory) => {
+async function eraseCategory (idCategory) {
     let erase = false;
     for (let i = 0; i < categories.length; i++) {
-        if (categories[i].id == idCategory) {
+        if (categories[i].id === idCategory) {
             categories.splice(i, 1);
-            deleteCategory({id: idCategory});
+            await deleteCategory({id: idCategory});
             erase = true;
         }
     }
     return erase;
 }
-const buttonEraseCategory = () => {
+async function buttonEraseCategory () {
     let idCategory = ui.getId();
-    let erase = eraseCategory(idCategory);
-    if (erase) {
-        loadCategoryTable();
+    if (!idCategory) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
     } else {
-        ui.showModal("Error", "No se encontro el registro.")
+        let erase = await eraseCategory(idCategory);
+        if (erase) {
+            await loadCategoriesTable();
+        } else {
+            ui.showModal("Error", "No se encontro el registro.")
+        }
     }
 }
 
 // Partidas
 // ver tabla partidas
-const loadGamesTable = () => {
+async function loadGamesTable () {
+    await loadGames();
     let registros = `<tr><th>ID</th><th>Palabra</th><th>Jugador</th><th>Intentos</th><th>Puntaje</th></tr>`;
     for (let i = 0; i < games.length; i++) {
-        registros += `<tr><td>${games[i].id}</td><td>${games[i].word}</td><td>${games[i].player}</td><td>${games[i].attempts}</td><td>${games[i].points}</td></tr>`
+        registros += `<tr><td>${games[i].id}</td><td>${games[i].id_palabra}</td><td>${games[i].id_jugador}</td><td>${games[i].intentos_usados}</td><td>${games[i].puntaje}</td></tr>`
     }
     document.getElementById("tabla").innerHTML = registros;
-    table = "Partidas";
+    table = "Game";
 }
 // añadir partida
-const addGame = (word, player, attemptsUsed, point) => {
+async function addGame (word, player, attemptsUsed, point) {
     let object = new Game(word, player, attemptsUsed, point);
     games.push(object);
-    postGame({id_palabra: word, id_jugador: player, intentos_usados: attemptsUsed, puntaje: point});
+    await postGame({id_palabra: word, id_jugador: player, intentos_usados: attemptsUsed, puntaje: point});
     return object.id;
 }
-const buttonAddGame = () => {
+async function buttonAddGame () {
     let word = ui.getWordId();
     let player = ui.getPlayerId();
     let attemptsUsed = ui.getAttempts();
     let point = ui.getPoints();
-    let object = addGame(word, player, attemptsUsed, point);
-    loadGamesTable();
+    if (!word || !player || !attemptsUsed || !point) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
+    } else {
+        let object = await addGame(word, player, attemptsUsed, point);
+        await loadGamesTable();
+    }
 }
 // editar partida
-const updateGame = (idGame, word, player, attemptsUsed, point) => {
+async function updateGame (idGame, word, player, attemptsUsed, point) {
     let update = false;
     for (let i = 0; i < games.length; i++) {
-        if (games[i].id == idGame) {
-            games[i].word = word;
-            games[i].player = player;
-            games[i].attempts = attemptsUsed;
-            games[i].points = point;
-            putGame({id_palabra: word, id_jugador: player, intentos_usados: attemptsUsed, puntaje: point, id: idGame});
+        if (games[i].id === idGame) {
+            games[i].id_palabra = word;
+            games[i].id_jugador = player;
+            games[i].intentos_usados = attemptsUsed;
+            games[i].puntaje = point;
+            await putGame({id_palabra: word, id_jugador: player, intentos_usados: attemptsUsed, puntaje: point, id: idGame});
             update = true;
         }
     }
     return update;
 }
-const buttonupdateGame = () => {
+async function buttonUpdateGame () {
     let idGame = ui.getId();
     let word = ui.getWordId();
     let player = ui.getPlayerId();
     let attemptsUsed = ui.getAttempts();
     let point = ui.getPoints();
-    let update = updateGame(idGame, word, player, attemptsUsed, point);
-    if (update) {
-        loadGamesTable();
+    if (!idGame || !word || !player || !attemptsUsed || !point) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
     } else {
-        ui.showModal("Error", "No se encontro el registro.")
+        let update = await updateGame(idGame, word, player, attemptsUsed, point);
+        if (update) {
+            await loadGamesTable();
+        } else {
+            ui.showModal("Error", "No se encontro el registro.")
+        }
     }
 }
 // eliminar partida
-const eraseGame = (idGame) => {
+async function eraseGame (idGame) {
     let erase = false;
     for (let i = 0; i < games.length; i++) {
-        if (games[i].id == idGame) {
+        if (games[i].id === idGame) {
             games.splice(i, 1);
-            deleteGame({id: idGame});
+            await deleteGame({id: idGame});
             erase = true;
         }
     }
     return erase;
 }
-const buttonEraseGame = () => {
+async function buttonEraseGame () {
     let idGame = ui.getId();
-    let erase = eraseGame(idGame);
-    if (erase) {
-        loadGamesTable();
+    if (!idGame) {
+        ui.showModal("Error", "No completaste todos los datos necesarios.");
     } else {
-        ui.showModal("Error", "No se encontro el registro.")
+        let erase = await eraseGame(idGame);
+        if (erase) {
+            await loadGamesTable();
+        } else {
+            ui.showModal("Error", "No se encontro el registro.")
+        }
     }
 }
 
@@ -565,20 +649,26 @@ let hiddenWord = [];
 let attempts = 6;
 let points;
 let usedLetters = [];
-// levar categoria
+// guardar categoria y cargar pagina
 const irJuego = (idCat) => {
     localStorage.setItem("categoria", idCat);
     window.location.href = "juego.html";
-    categoryWord = Number(localStorage.getItem("categoria"));
 }
-const prepareGame = () => {
+async function prepareGame () {
+    // descargar datos
+    await loadWords();
+    await loadGames();
+    await loadPlayers();
+    loadData();
+    // traer categoria
+    categoryWord = Number(localStorage.getItem("categoria"));
     // buscar posibles palabras (de la categoria elegida y no jugadas)
     let wordsCategory = [];
     for (let i = 0; i < words.length; i++) {
-        if (words[i].category === categoryWord) {
+        if (words[i].id_categoria === categoryWord) {
             let played = false;
             for (let j = 0; j < games.length; j++) {
-                if (games[j].player === id && games[j].word === words[i].id) {
+                if (games[j].id_jugador === id && games[j].id_palabra === words[i].id) {
                     played = true;
                     break;
                 }
@@ -594,7 +684,7 @@ const prepareGame = () => {
         // eligiendo palabra
         let random = Math.floor(Math.random() * wordsCategory.length);
         secretWordObject = wordsCategory[random];
-        secretWord = secretWordObject.word.toUpperCase();
+        secretWord = secretWordObject.palabra.toUpperCase();
 
         // mostrar palabra
         for (let i = 0; i < secretWord.length; i++) {
@@ -603,13 +693,16 @@ const prepareGame = () => {
         ui.showWord(hiddenWord);
 
         // inicializar puntos
-        switch (secretWordObject.dificulty) {
+        switch (secretWordObject.dificultad) {
             case "Fácil":
                 points = 6;
+                break;
             case "Medio":
                 points = 12;
+                break;
             case "Difícil":
                 points = 18;
+                break;
         }
     }
 }
@@ -620,7 +713,7 @@ const checkLetter = (letter) => {
         usedLetters.push(letter);
         let found = false;
         for (let i = 0; i < secretWord.length; i++) {
-            if (secretWord[i] == letter) {
+            if (secretWord[i] === letter) {
                 hiddenWord[i] = letter;
                 found = true;
             }
@@ -630,13 +723,16 @@ const checkLetter = (letter) => {
             ui.showWord(hiddenWord);
         } else {
             attempts--;
-            switch (secretWordObject.dificulty) {
+            switch (secretWordObject.dificultad) {
                 case "Fácil":
                     points--;
+                    break;
                 case "Medio":
                     points -= 2;
+                    break;
                 case "Difícil":
                     points -= 3;
+                    break;
             }
             ui.changeAhorcado(attempts);
         }
@@ -652,13 +748,13 @@ const checkLetter = (letter) => {
 const finishGame = () => {
     // guardo la partida
     games.push(new Game(secretWordObject.id, id, 6-attempts, points));
-    postGame({id_palabra: secretWordObject.id, id_jugador: id, intentos_usados: attempts, puntaje: points});
+    postGame({id_palabra: secretWordObject.id, id_jugador: id, intentos_usados: 6-attempts, puntaje: points});
 
     // guardo los puntos
     for (let i = 0; i < players.length; i++) {
         if (players[i].id === id) {
-            players[i].points += points;
-            putPlayer({usuario: players[i].username, contraseña: players[i].password, puntaje: players[i].points, ingreso: players[i].signIn, administrador: players[i].admin, id: id});
+            players[i].puntaje += points;
+            putPlayer({usuario: players[i].usuario, contraseña: players[i].contraseña, puntaje: players[i].puntaje, ingreso: players[i].ingreso, administrador: players[i].administrador, id: id});
         }
     }
 

@@ -21,7 +21,7 @@
         <h1 class="titulo-ahorcado">AHORCADO</h1>
 
         <div class="zona-ahorcado">
-          <img src="img/6.png" alt="ahorcado" title="ahorcado" id="ahorcado">
+          <img src="img/6.png" alt="ahorcado" title="ahorcado" id="ahorcado" class="imagen-ahorcado">
         </div>
 
         <div class="zona-palabra">
@@ -102,14 +102,14 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-personalizado">
           <div class="modal-header modal-header-personalizado">
-            <h5 class="modal-title titulo-modal" id="modalTitle"></h5>
+            <h5 class="modal-title titulo-modal" id="modalGameTitle"></h5>
             <button type="button" class="btn-close boton-cerrar-modal" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body modal-cuerpo">
-            <p id="modalBody"></p>
+            <p id="modalGameBody"></p>
           </div>
-          <div class="modal-footer modal-footer-personalizado">
-            <a href="categorias.html" type="button" class="boton-secundario" data-bs-dismiss="modal">Menu</a>
+          <div class="modal-footer modal-footer-personalizado botones-modal">
+            <a onclick="window.location.href='categorias.html'" type="button" class="boton-principal" data-bs-dismiss="modal">Menu</a>
             <a onclick="window.location.reload()" type="button" class="boton-principal" data-bs-dismiss="modal">Siguiente Palabra</a>
           </div>
         </div>
@@ -128,8 +128,5 @@
     <script src="scripts/requests.js"></script>
     <script src="scripts/dom.js"></script>
     <script src="scripts/logic.js"></script>
-</body>
-</html>
-
 </body>
 </html>

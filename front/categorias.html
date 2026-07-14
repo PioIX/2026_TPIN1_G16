@@ -12,20 +12,14 @@
     <title>Ahorcado - Categorías</title>
     <link rel="stylesheet" href="styles/styles.css">
 </head>
-<body>
-
-  <a href="index.html" class="enlace-volver" title="Volver al menú principal">
-            <img src="img/flecha.png" alt="Flecha para volver atrás">
-        </a>
-
-
-
+<body onload="loadCategoryHTML()">
     <div class="contenedor-vista">
-      <a href="index.html" class="enlace-volver" title="Volver al menu principal">
-        <img src="img/flecha.png" alt="Flecha para volver atras" onclick="modalSignOut">
+      <a onclick="modalSignOut()" class="enlace-volver" title="Volver al menu principal">
+        <img src="img/flecha.png" alt="Flecha para volver atras">
       </a>   
         <h1 class="titulo-ahorcado">AHORCADO</h1>
-        <a href="admin.html" style="display: none;" id="btnAdmin">Admin</a>
+        <a href="admin.html" class="btncostado admin" id="btnAdmin">Admin</a>
+        <a href="ranking.html" class="btncostado" id="btnRanking">Ranking</a>
         <div class="cuadricula-categorias" id="categorias">
         </div>
     </div>
@@ -57,9 +51,9 @@
           <div class="modal-body modal-cuerpo">
             <p id="modalBody">¿Está seguro que desea cerrar sesión?</p>
           </div>
-          <div class="modal-footer modal-footer-personalizado">
-            <button type="button" class="boton-secundario" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="boton-principal boton-peligro" onclick="signOut()" data-bs-dismiss="modal">Cerrar Sesión</button>
+          <div class="modal-footer modal-footer-personalizado botones-modal">
+            <button type="button" class="boton-principal" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="boton-principal" onclick="signOut()" data-bs-dismiss="modal">Cerrar Sesión</button>
           </div>
         </div>
       </div>

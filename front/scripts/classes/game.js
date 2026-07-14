@@ -5,14 +5,13 @@ if (!lastIdGame) {
 }
 
 class Game {
-    constructor (word, player, attempts, points) {
-        lastIdGame++;
-        this.id = lastIdGame;
-        localStorage.setItem("lastIdGame", lastIdGame);
+    constructor (word, player, attempts, points, id) {
+        this.id = id || lastIdGame + 1;
+        localStorage.setItem("lastIdGame", this.id);
 
-        this.word = word;
-        this.player = player;
-        this.attempts = attempts;
-        this.points = points;
+        this.id_palabra = word;
+        this.id_jugador = player;
+        this.intentos_usados = attempts;
+        this.puntaje = points;
     }
 }

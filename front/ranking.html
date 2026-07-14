@@ -18,15 +18,11 @@
             <img src="img/flecha.png" alt="Flecha para volver atrás">
         </a>
         <h1 class="titulo-ahorcado">RANKING</h1>
-        <button onclick="modalReset()" style="display: none;" id="btnReset">Reiniciar</button>
+        <a onclick="modalReset()" class="btncostado admin" id="btnReset">Reiniciar</a>
   </div>
 
   <div class="tabla-contenedor">
     <table class="tabla" id="tablaRanking">
-        <tr>
-            <th>Usuario</th>
-            <th>Puntaje</th>
-        </tr>
     </table>
   </div>
 
@@ -58,9 +54,9 @@
           <div class="modal-body modal-cuerpo">
             <p id="modalBody">¿Está seguro que desea reiniciar el ranking?</p>
           </div>
-          <div class="modal-footer modal-footer-personalizado">
-            <button type="button" class="boton-secundario" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="boton-principal boton-peligro" onclick="resetRanking()" data-bs-dismiss="modal">Reiniciar</button>
+          <div class="modal-footer modal-footer-personalizado botones-modal">
+            <button type="button" class="boton-principal" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="boton-principal" onclick="resetRanking()" data-bs-dismiss="modal">Reiniciar</button>
           </div>
         </div>
       </div>

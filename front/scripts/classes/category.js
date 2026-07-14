@@ -5,11 +5,10 @@ if (!lastIdCategory) {
 }
 
 class Category {
-    constructor(category){
-        lastIdCategory++;
-        this.id = lastIdCategory;
-        localStorage.setItem("lastIdCategory", lastIdCategory);
+    constructor(category, id){
+        this.id = id || lastIdCategory + 1;
+        localStorage.setItem("lastIdCategory", this.id);
         
-        this.category = category;
+        this.categoria = category;
     }
 }

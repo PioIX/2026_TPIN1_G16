@@ -13,7 +13,7 @@ class UserInterface {
         return document.getElementById("password2").value;
     }
     getId() {
-        return document.getElementById("id").value;
+        return Number(document.getElementById("id").value);
     }
     getPoints() {
         return document.getElementById("points").value;
@@ -29,12 +29,14 @@ class UserInterface {
     }
     getDificulty() {
         let dificulty = document.getElementById("dificulty").value;
-        if (dificulty == 1) {
+        if (dificulty === 1) {
             return "Fácil";
-        } else if (dificulty == 2) {
+        } else if (dificulty === 2) {
             return "Medio";
-        } else {
+        } else if (dificulty === 3) {
             return "Difícil";
+        } else {
+            return 0;
         }
     }
     getCategoryId() {
@@ -59,7 +61,7 @@ class UserInterface {
 
     // otros
     createCategory(idCategoria, categoria) {
-        document.getElementById("categorias").innerHTML += `<button class="boton-principal" onclick="irJuego(${idCategoria})">${categoria}</a>`
+        document.getElementById("categorias").innerHTML += `<button class="boton-principal categorias" onclick="irJuego(${idCategoria})">${categoria}</button>`
     }
 
     showWord(hiddenWord) {
@@ -71,11 +73,10 @@ class UserInterface {
     }
     changeLetter(found, letter) {
         let l = document.querySelector(`#${letter}`);
-        l.classlist.remove("tecla");
         if (found) {
-            l.classList.add("tecla.usada");
+            l.classList.add("usada");
         } else {
-            l.classList.add("tecla.fallada");
+            l.classList.add("fallada");
         }
     }
 
@@ -115,7 +116,7 @@ class UserInterface {
         if (funcion == "Delete") {
             div += '<div class="grupo-formulario"><input id="id" type="number" placeholder="ID"></div>';
         } else {
-            if (funcion == "Edit") {
+            if (funcion == "Update") {
                 div += '<div class="grupo-formulario"><input id="id" type="number" placeholder="ID"></div>';
             }
             if (tabla == "Player") {
